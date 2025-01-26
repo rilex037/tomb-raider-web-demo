@@ -1,0 +1,13 @@
+{
+  "name": "vite-project",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite --port 4200 --host"
+  },
+  "dependencies": {
+    "three": "^0.128.0"
+  },
+  "devDependencies": {
+    "vite": "^2.0.0"
+  }
+}
