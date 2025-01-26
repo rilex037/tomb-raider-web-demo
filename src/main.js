@@ -149,7 +149,6 @@ function createCustomShaderMaterial(baseTexture) {
         gl_FragColor = vec4(finalColor, 1.0);
       }
     `,
-    flatShading: true,
   });
 }
 
@@ -190,7 +189,6 @@ function createFloorShaderMaterial() {
         gl_FragColor = vec4(finalColor, 1.0);
       }
     `,
-    flatShading: true,
   });
 }
 
@@ -229,7 +227,6 @@ function createWallShaderMaterial() {
         gl_FragColor = vec4(finalColor, 1.0);
       }
     `,
-    flatShading: true,
   });
 }
 
