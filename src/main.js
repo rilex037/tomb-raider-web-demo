@@ -1,5 +1,11 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import customVertexShader from './shaders/custom.vert.glsl?raw';
+import customFragmentShader from './shaders/custom.frag.glsl?raw';
+import floorVertexShader from './shaders/floor.vert.glsl?raw';
+import floorFragmentShader from './shaders/floor.frag.glsl?raw';
+import wallVertexShader from './shaders/wall.vert.glsl?raw';
+import wallFragmentShader from './shaders/wall.frag.glsl?raw';
 
 let scene, camera, renderer, model, floor, lightmapTexture, grassTexture, wallTexture;
 let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
@@ -113,41 +119,8 @@ function createCustomShaderMaterial(baseTexture) {
       baseTexture: { value: baseTexture },
       textureResolution: { value: new THREE.Vector2(128.0, 128.0) },
     },
-    vertexShader: `
-      varying vec2 vUv;
-      varying vec3 vPosition;
-      void main() {
-        vUv = uv;
-        vPosition = position;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      precision mediump float;  // Use medium precision for retro effect
-
-      uniform sampler2D lightmap;
-      uniform sampler2D baseTexture;
-      uniform vec2 floorSize;
-      uniform vec3 modelPosition;
-      uniform vec3 baseColor;
-      varying vec2 vUv;
-      varying vec3 vPosition;
-
-      void main() {
-        // Calculate lightmap UVs
-        vec2 lightmapUV = (modelPosition.xz + floorSize / 2.0) / floorSize;
-        vec3 lightColor = texture2D(lightmap, lightmapUV).rgb;
-
-        // Lower precision texture lookup
-        vec2 textureResolution = vec2(128.0, 128.0); // Lower texture resolution
-        vec2 ditheredUV = floor(vUv * textureResolution) / textureResolution;
-        vec3 texColor = texture2D(baseTexture, ditheredUV).rgb;
-
-        // Combine colors and apply base color
-        vec3 finalColor = texColor * lightColor * baseColor;
-        gl_FragColor = vec4(finalColor, 1.0);
-      }
-    `,
+    vertexShader: customVertexShader,
+    fragmentShader: customFragmentShader
   });
 }
 
@@ -159,35 +132,8 @@ function createFloorShaderMaterial() {
       floorSize: { value: new THREE.Vector2(40, 40) },
       textureResolution: { value: new THREE.Vector2(128.0, 128.0) },
     },
-    vertexShader: `
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      precision mediump float;
-
-      uniform sampler2D lightmap;
-      uniform sampler2D grassTexture;
-      uniform vec2 floorSize;
-      varying vec2 vUv;
-
-      void main() {
-        // Calculate lightmap color
-        vec3 lightColor = texture2D(lightmap, vUv).rgb;
-
-        // Lower precision texture lookup for grass
-        vec2 textureResolution = vec2(128.0, 128.0);
-        vec2 ditheredUV = floor(vUv * textureResolution) / textureResolution;
-        vec3 grassColor = texture2D(grassTexture, ditheredUV * 10.0).rgb; // Multiply by 10 for tiling
-
-        // Combine colors
-        vec3 finalColor = grassColor * lightColor;
-        gl_FragColor = vec4(finalColor, 1.0);
-      }
-    `,
+    vertexShader: floorVertexShader,
+    fragmentShader: floorFragmentShader
   });
 }
 
@@ -198,34 +144,8 @@ function createWallShaderMaterial() {
       wallTexture: { value: wallTexture },
       textureResolution: { value: new THREE.Vector2(128.0, 128.0) },
     },
-    vertexShader: `
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      precision mediump float;  // Use medium precision for retro effect
-
-      uniform sampler2D lightmap;
-      uniform sampler2D wallTexture;
-      varying vec2 vUv;
-
-      void main() {
-        // Calculate lightmap color
-        vec3 lightColor = texture2D(lightmap, vUv).rgb;
-
-        // Lower precision texture lookup for walls
-        vec2 textureResolution = vec2(128.0, 128.0); // Lower texture resolution
-        vec2 ditheredUV = floor(vUv * textureResolution) / textureResolution;
-        vec3 wallColor = texture2D(wallTexture, ditheredUV).rgb;
-
-        // Combine colors
-        vec3 finalColor = wallColor * lightColor;
-        gl_FragColor = vec4(finalColor, 1.0);
-      }
-    `,
+    vertexShader: wallVertexShader,
+    fragmentShader: wallFragmentShader
   });
 }
 
