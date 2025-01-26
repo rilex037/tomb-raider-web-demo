@@ -6,7 +6,6 @@ let moveForward = false, moveBackward = false, moveLeft = false, moveRight = fal
 let velocity = new THREE.Vector3();
 let direction = new THREE.Vector3();
 let cameraOffset = new THREE.Vector3(0, 12, -8);
-let rotationSpeed = 0.1;
 let moveSpeed = 0.22;
 let cameraRotationY = 0;
 
@@ -45,7 +44,7 @@ function init() {
 
   // Load GLTF model
   const loader = new GLTFLoader();
-  loader.load('/scene.gltf', function (gltf) {
+  loader.load('/models/lara/scene.gltf', function (gltf) {  
     model = gltf.scene;
     model.position.y = 0.5;
     scene.add(model);
