@@ -1,7 +1,9 @@
 {
-  "name": "vite-project",
+  "name": "tomb-raider-web-demo",
   "version": "1.0.0",
+  "description": "Tomb Raider-style 3D web demo with TypeScript and Three.js",
   "license": "MIT",
+  "author": "Your Name",
   "type": "module",
   "scripts": {
     "dev": "vite --port 4200 --host",
