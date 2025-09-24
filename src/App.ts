@@ -71,7 +71,7 @@ export class App {
     this.createWalls();
 
     try {
-      this.model = await this.modelLoader.loadModel('/models/lara/scene.gltf');
+      this.model = await this.modelLoader.loadModel('/models/lara/lara.gltf');
       this.sceneManager.addObject(this.model);
       this.modelLoader.applyCustomShadersToModel(
         this.model,
